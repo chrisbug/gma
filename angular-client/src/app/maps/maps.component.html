@@ -1,0 +1,29 @@
+<h1>{{ title }}</h1>
+
+<!-- this creates a google map on the page with the given lat/lng form -->
+<!-- the component as the initial center of the map: -->
+<div class="row">
+  <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="mapClicked($event)">
+    <agm-marker 
+      *ngFor="let marker of markers" 
+      [latitude]="marker.lat" 
+      [longitude]="marker.lng"
+      (markerClick)="markerClicked(marker)"
+      >
+      <agm-info-window>
+        <strong>{{marker.name}}</strong>
+      </agm-info-window>
+    </agm-marker>
+  </agm-map>
+</div>
+
+<div class="row">
+  <form>
+    <label>Location Name</label>
+    <input type="text" [(ngModel)]="markerName" name="markerName">
+    <label>Latitude</label>
+    <input type="text" [(ngModel)]="markerLat" name="markerLat">
+    <label>Longitude</label>
+    <input type="text" [(ngModel)]="markerLng" name="markerLng">
+  </form>
+</div>
