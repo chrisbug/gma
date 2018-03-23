@@ -2,10 +2,9 @@
 
 <!-- this creates a google map on the page with the given lat/lng form -->
 <!-- the component as the initial center of the map: -->
-<div class="row">
-  <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="mapClicked($event)">
-    <agm-marker 
-      *ngFor="let marker of markers" 
+<div class="row" *ngIf="markerLat">
+  <agm-map [latitude]="markerLat" [longitude]="markerLng" (mapClick)="mapClicked($event)">
+    <agm-marker *ngIf="marker"
       [latitude]="marker.lat" 
       [longitude]="marker.lng"
       (markerClick)="markerClicked(marker)"
@@ -26,4 +25,5 @@
     <label>Longitude</label>
     <input type="text" [(ngModel)]="markerLng" name="markerLng">
   </form>
+  <button (click)="meetUpChange()">Change meetingpoint</button>
 </div>

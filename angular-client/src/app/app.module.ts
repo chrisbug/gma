@@ -5,6 +5,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AppComponent } from './app.component';
 import { MapsComponent } from './maps/maps.component';
 import { CommonModule } from '@angular/common';
+import { MarkersService } from './markers.service';
 
 
 @NgModule({
@@ -20,7 +21,7 @@ import { CommonModule } from '@angular/common';
       apiKey: 'AIzaSyC5eQniYJCql71bD7mffKxVBCNr1hIV7JU'
     })
   ],
-  providers: [],
+  providers: [MarkersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

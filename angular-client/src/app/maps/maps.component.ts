@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
-import { } from '@types/googlemaps';
+import { MarkersService } from '../markers.service';
+import { AgmMap } from '@agm/core';
+import { getHostElement } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-maps',
@@ -9,44 +11,66 @@ import { } from '@types/googlemaps';
 })
 export class MapsComponent implements OnInit {
   title = 'my first AGM project';
-  markerLat = 51.678418;
-  markerLng = 7.809007;
+  markerLat: number;
+  markerLng: number;
+  changeMeetingPoint = false;
+  marker: Marker;
 
-  markers: Marker[] = [
-    {
-      name: 'Meeting Point',
-      lat: 51.678418,
-      lng: 7.809007
-     },
-    {
-      name: 'Meeting Point 2',
-      lat: 53.678418,
-      lng: 9.809007
-    }
-  ];
+  constructor(private markerService: MarkersService) {}
 
-  constructor(){
-  }
   ngOnInit() {
-    for (let marker of this.markers) {
-      console.log(marker);
+    if (this.markerService.getMarkers()) {
+      this.marker = this.markerService.getMarkers();
+      this.markerLat = this.marker.lat;
+      this.markerLng = this.marker.lng;
+    } else {
+      if (navigator.geolocation) {
+        this.findMe();
+      }
     }
   }
 
   mapClicked($event: any) {
-    console.log($event);
-    const newMarker = {
-      name: 'New Location',
-      lat: $event.coords.lat,
-      lng: $event.coords.lng
-    };
-    this.markers.push(newMarker);
+    if (this.changeMeetingPoint) {
+      console.log($event);
+      this.markerLat = $event.coords.lat;
+      this.markerLng = $event.coords.lng;
+      const newMarker = {
+        name: 'Meeting Point',
+        lat: $event.coords.lat,
+        lng: $event.coords.lng
+      };
+      this.marker = newMarker;
+      this.markerService.setMarkers(newMarker);
+    }
   }
   markerClicked(marker: Marker) {
     console.log('Clicked marker ' + marker.name );
     this.markerLat = marker.lat;
     this.markerLng = marker.lng;
     this.title = marker.name;
+  }
+
+  meetUpChange() {
+    this.changeMeetingPoint = !this.changeMeetingPoint;
+  }
+
+  findMe() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.showPosition(position);
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  showPosition(position) {
+    console.log("showPosition");
+    this.markerLat = position.coords.latitude;
+    this.markerLng = position.coords.longitude;
+    console.log(this.markerLat);
+    console.log(this.markerLng);
   }
 
 
